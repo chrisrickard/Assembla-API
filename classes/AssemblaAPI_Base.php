@@ -74,8 +74,17 @@ protected function _loadConfig( $file = ""){
 
 protected function _returnElement( $element ){
 	  if( $element instanceof SimpleXMLElement ):
+	      $attrs = current($element->attributes());
+	      
 	      if( trim((string) $element) && trim((string) $element) !== 'Array' ):
 	      	      return (string) $element;
+
+	      elseif(  !empty($attrs) && in_array('type', array_keys($attrs) ) && $attrs['type'] == 'array'):
+	      	       $returnArr = array();
+	      	       foreach( $element AS $e ):
+		       		$returnArr[] = $this->_returnElement( $e );
+		       endforeach;
+		       return $returnArr;
 	      endif;    
 	  endif;
 

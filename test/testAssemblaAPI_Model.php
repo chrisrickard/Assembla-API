@@ -1,6 +1,6 @@
 <?php
 
-require_once( '../constaints.php' );
+require_once( '../constants.php' );
 require_once( '../classes/AssemblaAPI_Model.php' );
 
 
@@ -18,7 +18,7 @@ class AssemblaAPI_ModelTest extends PHPUnit_Framework_TestCase {
       /* make sure credentials exist */
       public function testCredentials(){
 
-	     $this->assertInternalType( 'array', $this->_obj->getConfigUri('credentials') );
+	     $this->assertInstanceOf( 'SimpleXMLElement', $this->_obj->getConfigUri('credentials') );
 	     $this->assertTrue( $this->_obj->getConfigUri('credentials/username') !== "" );
 	     $this->assertTrue( $this->_obj->getConfigUri('credentials/password') !== "" );
 
@@ -26,13 +26,13 @@ class AssemblaAPI_ModelTest extends PHPUnit_Framework_TestCase {
       /* make sure defaults exist*/
       public function testDefaults(){
       	     
-     	     $this->assertInternalType( 'array', $this->_obj->getConfigUri('defaults') );
+     	     $this->assertInstanceOf( 'SimpleXMLElement', $this->_obj->getConfigUri('defaults') );
      	     $this->assertTrue( $this->_obj->getConfigUri('defaults/url') !== "" );
       
       }
       
       public function testServices(){
-      	     $this->assertInternalType( 'array', $this->_obj->getConfigUri('services') );
+      	     $this->assertInstanceOf( 'SimpleXMLElement', $this->_obj->getConfigUri('services') );
       }
       
       private function _checkHeader( $str ){
@@ -77,13 +77,14 @@ class AssemblaAPI_ModelTest extends PHPUnit_Framework_TestCase {
 
       private function _testServiceConfig( $uri ){
 
-	     $this->assertInternalType( 'array', $this->_obj->getConfigUri('services/' . $uri . '') );
+	     $this->assertInstanceOf( 'SimpleXMLElement', $this->_obj->getConfigUri('services/' . $uri . '') );
 	     $this->assertTrue( $this->_obj->getConfigUri('services/' . $uri . '/uri') !== "" );
-	     $this->assertTrue( $this->_obj->getConfigUri('services/' . $uri . '/type') != "" );
+	     $this->assertTrue( $this->_obj->getConfigUri('services/' . $uri . '/type') !== "" );
 
 	     if( $this->_obj->getConfigUri('services/' . $uri . '/headers') !== "" ):
-	     	 foreach( $this->_obj->getConfigUri('services/' . $uri . '/headers') AS $header ):
-		 	  var_dump($header);
+	         $headers = $this->_obj->getConfigUri('services/' . $uri . '/headers');
+	         $this->assertInternalType( 'array', $headers );
+	     	 foreach( $headers AS $header ):
 		 	  $this->assertInternalType( 'string', $header );
 			  $this->_checkHeader($header);
 		 endforeach;

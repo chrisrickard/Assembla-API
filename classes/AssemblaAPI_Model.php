@@ -64,7 +64,7 @@ protected function _setOps( $serviceUri, $varmap, $handle ){
 	      
 	      curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
 
-	      $headers = $this->getConfigUri($serviceUri . "/headers/header");
+	      $headers = $this->getConfigUri($serviceUri . "/headers");
 
 	      if( is_array($headers) && ! empty($headers)):
 	          curl_setopt($handle, CURLOPT_HTTPHEADER, array_values($headers));
