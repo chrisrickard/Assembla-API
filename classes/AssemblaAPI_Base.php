@@ -72,62 +72,17 @@ protected function _loadConfig( $file = ""){
 }
 
 
-protected function returnElement( $elements ){
+protected function _returnElement( $element ){
+	  if( $element instanceof SimpleXMLElement ):
 
-/* VERY MESSY  but seems funtional for now.  tested with the following:
-   MUST be refactored!!!!!
-$foo = new AssemblaAPI_Model( 'configs/model.xml' );
-var_dump($foo->getConfigUri('/config/defaults/url') );
-var_dump($foo->getConfigUri('/config/services') );
-var_dump($foo->getConfigUri('/config') );
-var_dump($foo->getConfigUri('/config/services/my_spaces_list/headers') );
-var_dump($foo->getConfigUri('/config/services/my_spaces_list/headers/header') );
-var_dump($foo->getConfigUri('//header'));
-
-*/
-
-
-	  if( is_array($elements) && count($elements) == 1 ):
-	      $elements = $elements[0];
-	      if( ! $elements instanceof SimpleXMLElement ):
-	      	  return (string) $elements;
-	      endif;
+	      if( count($element->children()) == 1 &&
+	          is_string(current($element->children())) ):
+	      	      return (string) $element;
+	      endif;    
 	  endif;
 
-	  $elements = (array) $elements;
-
-	  foreach( $elements AS $key => $value ):
-	      if($value instanceof SimpleXMLElement ):
-	              $elements[$key] = $this->returnElement( Array( $value )  );
-	      endif;
-	  endforeach;
-	  if( count( $elements) == 1 && isset( $elements[0] ) && is_string( $elements[0] ) ):
-	      return $elements[0];
-	  else:
-	      return $elements;
-	  endif;
-/*
-
-	working (kind of) - returns array of arrays on xpath like //header
-
-	  if( count($elements) == 1 ):
-	      $elements = $elements[0];
-	      if( ! $elements instanceof SimpleXMLElement ):
-	      	  return (string) $elements;
-	      endif;
-	  endif;
-
-	  $elements = (array) $elements;
-	  foreach( $elements AS $key => $value ):
-	      if($value instanceof SimpleXMLElement ):
-	          $elements[$key] = $this->returnElement( Array( $value )  );
-	      endif;
-	  endforeach;
-	  return $elements;
-
-*/
+	  return $element;
 }
-
 
 /*
  *  @pre:    none
@@ -142,8 +97,20 @@ var_dump($foo->getConfigUri('//header'));
 public function getConfigUri( $path ){
        if( !empty($path) ):
        	   if( $this->_config && $this->_config instanceof SimpleXMLElement ):
-	       return $this->returnElement( $this->_config->xpath( $path ) );
+	       $elements = $this->_config->xpath( $path );
 
+	       if( count($elements) == 1 ):
+	           return $this->_returnElement(  $elements[0] );
+	       else:
+	           foreach( $elements AS $element ):
+		   	if( $element instanceof SimpleXMLElement ):
+		   	    $returnArr[] = $this->_returnElement( $element );
+			else:
+			    $returnArr[] = $element;
+			endif;
+		   endforeach;
+		   return $returnArr;
+	       endif;
 	   else:
 	       ErrorHandler::Error(ErrorHandler::WARNING, '$this->_config cannot be empty!');
 	       return false;
