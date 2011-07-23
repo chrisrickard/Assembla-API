@@ -74,9 +74,7 @@ protected function _loadConfig( $file = ""){
 
 protected function _returnElement( $element ){
 	  if( $element instanceof SimpleXMLElement ):
-
-	      if( count($element->children()) == 1 &&
-	          is_string(current($element->children())) ):
+	      if( trim((string) $element) && trim((string) $element) !== 'Array' ):
 	      	      return (string) $element;
 	      endif;    
 	  endif;
@@ -100,8 +98,9 @@ public function getConfigUri( $path ){
 	       $elements = $this->_config->xpath( $path );
 
 	       if( count($elements) == 1 ):
-	           return $this->_returnElement(  $elements[0] );
+	           return $this->_returnElement(  current($elements) );
 	       else:
+	           $returnArr = array();
 	           foreach( $elements AS $element ):
 		   	if( $element instanceof SimpleXMLElement ):
 		   	    $returnArr[] = $this->_returnElement( $element );

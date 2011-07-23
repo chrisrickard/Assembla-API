@@ -64,13 +64,10 @@ protected function _setOps( $serviceUri, $varmap, $handle ){
 	      
 	      curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
 
-	      $headers = $this->getConfigUri($serviceUri . "/headers");
+	      $headers = $this->getConfigUri($serviceUri . "/headers/header");
 
-	      if( $headers instanceof SimpleXMLElement ):
-	      	  foreach($headers AS $header):
-		  	$headeropts[] = (string)$header[0];
-		  endforeach;
-	          curl_setopt($handle, CURLOPT_HTTPHEADER, array_values($headeropts));
+	      if( is_array($headers) && ! empty($headers)):
+	          curl_setopt($handle, CURLOPT_HTTPHEADER, array_values($headers));
 	      endif;
 
 	      //  *** UNTESTED ***
