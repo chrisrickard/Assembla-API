@@ -17,7 +17,8 @@ $foo = new AssemblaAPI_Model( 'configs/model.xml' );
 //var_dump($foo->getConfigUri('/config/services/my_spaces_list/headers/header') );
 //var_dump($foo->getConfigUri('//header'));
 
-var_dump($foo->loadMySpacesList());
+$spaces = $foo->loadMySpacesList()->getXMLValue("//space");
+var_dump($spaces);
 
 
 ?>

@@ -96,7 +96,7 @@ protected function _returnElement( $element ){
 protected function _queryXML( $path, $rootElement ){
        if( !empty($path) ):
        	   if( $rootElement && $rootElement instanceof SimpleXMLElement ):
-	       $elements = $this->_config->xpath( $path );
+	       $elements = $rootElement->xpath( $path );
 
 	       if( count($elements) == 1 ):
 	           return $this->_returnElement(  current($elements) );
