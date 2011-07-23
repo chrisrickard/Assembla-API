@@ -1,0 +1,7 @@
+<?php
+class AssemblaAPI_View extends AssemblaAPI_Base {
+
+
+}
+
+?>

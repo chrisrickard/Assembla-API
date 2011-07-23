@@ -1,0 +1,7 @@
+<?php
+
+require_once ../classes/ErrorHanlder.php
+require_once PHPUnit.php
+
+
+?>
