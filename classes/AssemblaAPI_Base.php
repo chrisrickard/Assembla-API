@@ -92,9 +92,10 @@ protected function _returnElement( $element ){
  */
 
 
-public function getConfigUri( $path ){
+
+protected function _queryXML( $path, $rootElement ){
        if( !empty($path) ):
-       	   if( $this->_config && $this->_config instanceof SimpleXMLElement ):
+       	   if( $rootElement && $rootElement instanceof SimpleXMLElement ):
 	       $elements = $this->_config->xpath( $path );
 
 	       if( count($elements) == 1 ):
@@ -111,7 +112,7 @@ public function getConfigUri( $path ){
 		   return $returnArr;
 	       endif;
 	   else:
-	       ErrorHandler::Error(ErrorHandler::WARNING, '$this->_config cannot be empty!');
+	       ErrorHandler::Error(ErrorHandler::WARNING, '$rootElement cannot be empty!');
 	       return false;
 	   endif;
        else:
@@ -120,6 +121,25 @@ public function getConfigUri( $path ){
        endif;
        
 }
+
+
+public function getConfigUri( $path ){
+       if( $this->_config instanceof SimpleXMLElement ):
+       	   return $this->_queryXML( $path, $this->_config);
+       else:
+           return '';
+       endif;
+}
+
+public function getXMLValue( $path ){
+       if( $this->_xml instanceof SimpleXMLElement ):
+       	   return $this->_queryXML( $path, $this->_xml);
+       else:
+           return '';
+       endif;
+
+}
+
 
 /*
 public function getConfigUri( $path ){
